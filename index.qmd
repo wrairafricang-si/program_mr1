@@ -4,7 +4,7 @@ author: Strategic Information Unit
 format:
   dashboard:
       theme: quartz
-      scrolling: true
+      scrolling: false
       nav-buttons:
           - text: Home
           - icon: gitlab

@@ -722,10 +722,22 @@ radet_elig_vl <- radet %>%
   summarise(total_eligible = n()) %>% 
   pull(total_eligible)
 
+
 radet_current_vl <- radet %>% 
   filter(current_vl == "Current VL") %>% 
   summarise(total_current_vl = n()) %>% 
   pull(total_current_vl)
+
+
+radet_vls <- radet %>% 
+  filter(supp_1000 == "Suppressed") %>% 
+  summarise(total_vls = n()) %>% 
+  pull(total_vls)
+
+radet_vls50 <- radet %>% 
+  filter(supp_50 == "Suppressed") %>% 
+  summarise(total_vls50 = n()) %>% 
+  pull(total_vls50)
 
 ```
 
@@ -785,7 +797,7 @@ value_box(
 ```{r}
 value_box(
   title = tags$span("Current on Treatment", style = "font-size: 30px;font-weight:bold;"),
-  value = scales::comma(tx_curr),
+  value = scales::comma(radet_tx_curr),
   showcase = bsicons::bs_icon("people"),
   theme = value_box_theme(bg ="#002a2a")
 )
@@ -794,7 +806,7 @@ value_box(
 ```{r}
 value_box(
   title = tags$span("Had a Viral Load", style = "font-size: 30px;font-weight:bold;"),
-  value = scales::comma(tx_pvls_d),
+  value = scales::comma(radet_current_vl),
   showcase = bsicons::bs_icon("virus"),
   theme = value_box_theme(bg ="#004646")
 )
@@ -803,7 +815,7 @@ value_box(
 ```{r}
 value_box(
   title = tags$span("Total Suppressed", style = "font-size: 30px;font-weight:bold;"),
-  value = scales::comma(total_vl_sup),
+  value = scales::comma(radet_vls),
   showcase = bsicons::bs_icon("chevron-double-down"),
   theme = value_box_theme(bg ="#a9d0b8")
 )
@@ -823,7 +835,7 @@ value_box(
 ```{r}
 value_box(
   title = tags$span("VL Suppression", style = "font-size: 30px;font-weight:bold;"),
-  value = scales::percent(vls),
+  value = scales::percent(radet_vls/radet_current_vl),
   showcase = bsicons::bs_icon("box-arrow-in-down-right"),
   theme = value_box_theme(bg ="#0aff76")
 )
@@ -832,7 +844,7 @@ value_box(
 ```{r}
 value_box(
   title = tags$span("Undetectable VL <50 c/ml", style = "font-size: 30px;font-weight:bold;"),
-  value = scales::percent(vl_sup50),
+  value = scales::percent(radet_vls50/radet_current_vl),
   showcase = bsicons::bs_icon("virus2"),
   theme = value_box_theme(bg ="#cf402e")
 )

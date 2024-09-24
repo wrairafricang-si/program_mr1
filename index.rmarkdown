@@ -837,7 +837,7 @@ value_box(
 
 ## Performance Summary
 
-### {width=60%}
+### {width=50%}
 
 
 ```{r echo=FALSE, results='asis', warning=FALSE, message=FALSE, title="PROGRAM AREA PERFORMANCE AGAINST TARGETS | OCTOBER 2023 - AUGUST 2024", height=550, width = 800}
@@ -850,7 +850,7 @@ grid.draw(grid.arrange(grobs = plot_list, ncol = 6))
 
 
 
-### Viral Load Coverage by Age Group {width=40%}
+### Viral Load Coverage by Age Group {width=50%}
 
 
 ```{r title = "VIRAL LOAD COVERAGE AMONG MALES", fig.width=20, fig.height=7}

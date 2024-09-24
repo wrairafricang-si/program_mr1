@@ -12,7 +12,6 @@ format:
   
 ---
 
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 if(!require(pacman)) install.packages("pacman")
@@ -53,7 +52,6 @@ pacman::p_load(tidyverse,
 
 ```
 
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Load the data
 
@@ -72,8 +70,6 @@ biom_update <- read_csv("data/biometric_update.csv")
 radet <- read_csv("data/radet_sep24.csv")
 
 ```
-
-
 
 ```{r}
 
@@ -167,8 +163,6 @@ biom_update <- clean_names(biom_update)
 
 ```
 
-
-
 ```{r}
 
 # Clean the vl_casc data
@@ -205,9 +199,6 @@ vl_casc_aug <- vl_casc %>%
   filter(data !="TX_NEW")
 
 ```
-
-
-
 
 ```{r}
 
@@ -321,9 +312,6 @@ vlc_fem <- ggplot(vl_plot_female, aes(x = age_group)) +
 
 ```
 
-
-
-
 ```{r}
 # Sum of TX_NEW from Feb 2024 to Jul 2024 to determine eligibility for VL testing
 
@@ -332,9 +320,6 @@ tx_new_mar_aug<- data_fil %>%
   summarise(total_tx_new = sum(value, na.rm = TRUE)) %>% 
   pull(total_tx_new)
 ```
-
-
-
 
 ```{r}
 
@@ -440,7 +425,6 @@ prog_vl_sup <- vl_summary_pivot %>%
 
 ```
 
-
 ```{r}
 
 # Calculate Program area performance (indicator value/target_code value)
@@ -467,7 +451,6 @@ data_sum_new <- data_sum_new %>%
          text_color = ifelse(color == "yellow", "black", "white"))
 
 ```
-
 
 ```{r echo=FALSE, warning=FALSE, include=FALSE}
 
@@ -505,7 +488,6 @@ plot_list <- lapply(1:nrow(data_sum_new), function(i) {
 })
 
 ```
-
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 
@@ -545,7 +527,6 @@ vl_sup50 <- vl_lt50/tx_pvls_d
 
 ```
 
-
 ```{r}
 
 # Initial cleaning and parameter setting for the RADET
@@ -578,7 +559,6 @@ radet <- radet %>%
 
 ```
 
-
 ```{r}
 
 # Function to convert dates in "dd-MMM-yy" format to Date objects on the RADET
@@ -595,9 +575,6 @@ radet <- radet %>%
   mutate(across(contains("cleaned"), as.Date))
 
 ```
-
-
-
 
 ```{r}
 
@@ -742,8 +719,6 @@ radet_vls50 <- radet %>%
 
 ```
 
-
-
 ```{r}
 
 
@@ -751,9 +726,11 @@ radet_vls50 <- radet %>%
 ```
 
 
+
 # PROGRAM CASCADE FY24
 
 ##  {height="30%"}
+
 
 ```{r} 
 # Set font color to white
@@ -793,7 +770,9 @@ value_box(
 )
 ```
 
+
 ##  {height="30%"}
+
 
 ```{r}
 value_box(
@@ -822,7 +801,9 @@ value_box(
 )
 ```
 
+
 ##  {height="30%"}
+
 
 ```{r}
 value_box(
@@ -851,11 +832,13 @@ value_box(
 )
 ```
 
+
 # Program Performance FY24
 
 ## Performance Summary
 
 ### {width=60%}
+
 
 ```{r echo=FALSE, results='asis', warning=FALSE, message=FALSE, title="PROGRAM AREA PERFORMANCE AGAINST TARGETS | OCTOBER 2023 - AUGUST 2024", height=550, width = 800}
 # windows(width = 20, height = 10)
@@ -866,7 +849,9 @@ grid.draw(grid.arrange(grobs = plot_list, ncol = 6))
 
 
 
+
 ### Viral Load Coverage by Age Group {width=40%}
+
 
 ```{r title = "VIRAL LOAD COVERAGE AMONG MALES", fig.width=20, fig.height=7}
 
@@ -877,5 +862,4 @@ vlc_male
 # windows (width = 20, height = 10)
 vlc_fem
 ```
-
 

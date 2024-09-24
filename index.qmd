@@ -8,11 +8,7 @@ format:
       nav-buttons:
           - text: Home
           - icon: gitlab
-          - search: true
-      navbar:
-        left:
-          - text: Navigation
-          - text: Previous data
+         
   
 ---
 
@@ -76,6 +72,7 @@ biom_update <- read_csv("data/biometric_update.csv")
 radet <- read_csv("data/radet_sep24.csv")
 
 ```
+
 
 
 ```{r}
@@ -325,6 +322,8 @@ vlc_fem <- ggplot(vl_plot_female, aes(x = age_group)) +
 ```
 
 
+
+
 ```{r}
 # Sum of TX_NEW from Feb 2024 to Jul 2024 to determine eligibility for VL testing
 
@@ -333,6 +332,8 @@ tx_new_mar_aug<- data_fil %>%
   summarise(total_tx_new = sum(value, na.rm = TRUE)) %>% 
   pull(total_tx_new)
 ```
+
+
 
 
 ```{r}
@@ -817,7 +818,7 @@ value_box(
   title = tags$span("Total Suppressed", style = "font-size: 30px;font-weight:bold;"),
   value = scales::comma(radet_vls),
   showcase = bsicons::bs_icon("chevron-double-down"),
-  theme = value_box_theme(bg ="#a9d0b8")
+  theme = value_box_theme(bg ="#4b5539")
 )
 ```
 
@@ -828,7 +829,7 @@ value_box(
   title = tags$span("VL Coverage", style = "font-size: 30px;font-weight:bold;"),
   value = scales::percent(radet_current_vl/radet_elig_vl),
   showcase = bsicons::bs_icon("align-top"),
-  theme = value_box_theme(bg ="#93bdcf")
+  theme = value_box_theme(bg ="#6c7735")
 )
 ```
 
@@ -837,7 +838,7 @@ value_box(
   title = tags$span("VL Suppression", style = "font-size: 30px;font-weight:bold;"),
   value = scales::percent(radet_vls/radet_current_vl),
   showcase = bsicons::bs_icon("box-arrow-in-down-right"),
-  theme = value_box_theme(bg ="#0aff76")
+  theme = value_box_theme(bg ="#22bb11")
 )
 ```
 

@@ -115,7 +115,7 @@ data_fil <- prog_data_site %>%
 
 
 data_fil_cum <- prog_data_site %>% 
-  filter(indicator == "TX_CURR_R" | indicator == "TX_PVLS_D_R",
+  filter(indicator == "TX_CURR_R" | indicator == "TX_PVLS_D_R" | indicator == "OVC_SERV_CP_R",
          month == "Aug")
 
 
@@ -127,7 +127,7 @@ data_sum <- data_fil %>%
 
 # Take out cumulative indicators: TX_CURR_R, TX_PVLS_D_R, and TX_PVLS_N_R
 data_sum <- data_sum %>% 
-  filter(!indicator %in% c("TX_CURR_R", "TX_PVLS_D_R", "TX_PVLS_N_R", "TX_TB_R"))
+  filter(!indicator %in% c("TX_CURR_R", "TX_PVLS_D_R", "TX_PVLS_N_R", "TX_TB_R", "OVC_SERV_CP_R"))
 
 
 # Create program area variable to facilitate join with target data set
@@ -150,6 +150,22 @@ data_sum_cum_r <- data_sum_cum %>%
 
 data_sum_r <- data_sum_r %>%
   bind_rows(data_sum_cum_r)
+
+# Add OVC_SERV_CP_R and OVC_SERV_PR_R to create new indicator OVC_SERV, drop existing indicators, and change prog_area to OVC_SERV
+
+data_sum_r <- data_sum_r %>%
+  filter(indicator %in% c("OVC_SERV_CP_R", "OVC_SERV_PR_R")) %>%  # Filter the relevant indicators
+  summarise(
+    indicator = "OVC_SERV_R",           # Create the new indicator
+    total_value = sum(total_value),     # Sum the total_value
+    prog_area = "OVC_SERV"              # Set prog_area to "OVC_SERV"
+  ) %>%
+  bind_rows(
+    data_sum_r %>%                      # Add back the other rows
+      filter(!indicator %in% c("OVC_SERV_CP_R", "OVC_SERV_PR_R"))
+  )
+
+
 
 # Change the PrEP target code names
 

@@ -48,7 +48,8 @@ pacman::p_load(tidyverse,
                gifski,
                png,
                gridExtra,
-               grid)
+               grid,
+               esquisse)
 
 
 ```
@@ -756,13 +757,50 @@ radet_vls50 <- radet %>%
   summarise(total_vls50 = n()) %>% 
   pull(total_vls50)
 
+
+
+# Create a dataset from the RADET for VL coverage (had a vl / eligible for vl) by sex and age group
+
+radet_vl_cov <- radet %>%
+  filter(eligible_vl == "Eligible") %>%
+  group_by(sex, age_group) %>%
+  summarise(
+    current_vl = sum(current_vl == "Current VL", na.rm = TRUE),
+    total_eligible = n()
+  ) %>%
+  mutate(vl_cov = current_vl / total_eligible)
+
+
+
+
+
+
+
+
+
 ```
 
 
 
 ```{r}
 
+# Plot vl_cov by sex and age group
 
+vl_cov_plot <- radet_vl_cov %>%
+  ggplot(aes(x = age_group, y = vl_cov, fill =sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = scales::percent(vl_cov, accuracy = 1)), vjust = -0.5, size = 4) +
+  labs(
+    title = "Viral Load Coverage by Age Group",
+    x = "Age Group",
+    y = "Coverage (%)"
+  ) +
+  #scale_fill(discrete = TRUE) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 14),
+    axis.text.y = element_text(size = 14)
+  )
 
 ```
 

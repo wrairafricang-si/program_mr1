@@ -1,5 +1,5 @@
 ---
-title: WRAIR AFRICA DASHBOARD | AUGUST 2024
+title: WRAIR AFRICA DASHBOARD | SEPTEMBER 2024
 author: Strategic Information Unit
 format:
   dashboard:

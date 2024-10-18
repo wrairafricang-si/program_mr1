@@ -58,15 +58,15 @@ pacman::p_load(tidyverse,
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Load the data
 
-prog_data <- read_csv("data/prog_data_aug24.csv")
+prog_data <- read_csv("data/prog_data_sep24.csv")
 
 prog_targets <- read_csv("data/fy24_targets.csv")
 
-vl_data <- read_csv("data/vl_data_aug24.csv")
+vl_data <- read_csv("data/vl_data_sep24.csv")
 
 prog_site <- read_csv("data/prog_sites.csv")
 
-vl_casc <- read_csv("data/vl_data_agesex_aug24.csv")
+vl_casc <- read_csv("data/vl_data_agesex_sep24.csv")
 
 biom_update <- read_csv("data/biometric_update.csv")
 
@@ -112,12 +112,12 @@ prog_data_site <- prog_data_site %>%
 
 # Filter the data for the required period
 data_fil <- prog_data_site %>%
-  filter(period >= ymd("2023-10-01") & period <= ymd("2024-08-31"))
+  filter(period >= ymd("2023-10-01") & period <= ymd("2024-09-30"))
 
 
 data_fil_cum <- prog_data_site %>% 
   filter(indicator == "TX_CURR_R" | indicator == "TX_PVLS_D_R" | indicator == "OVC_SERV_CP_R",
-         month == "Aug")
+         month == "Sep")
 
 
 # Create summary values for each indicator
@@ -218,7 +218,7 @@ vl_casc <- vl_casc %>%
 # Filter the TX_CURR, TX_PVLS_D, and TX_PVLS_N data for August 2024
 
 vl_casc_aug <- vl_casc %>%
-  filter(period == ymd("2024-08-01") & age_group != "All") %>% 
+  filter(period == ymd("2024-09-01") & age_group != "All") %>% 
   filter(data !="TX_NEW")
 
 ```
@@ -230,7 +230,7 @@ vl_casc_aug <- vl_casc %>%
 
 # Create the new variable within the existing vl_casc dataset
 vl_casc1 <- vl_casc %>%
-  filter(data == "TX_NEW" & month %in% c("Mar", "Apr", "May", "Jun", "Jul","Aug") & year == 2024) %>% 
+  filter(data == "TX_NEW" & month %in% c("Apr", "May", "Jun", "Jul","Aug", "Sep") & year == 2024) %>% 
   group_by(data, sex, age_group) %>%
   summarise(tx_new_sum = sum(value, na.rm = TRUE)) %>%
   ungroup() %>% 
@@ -342,10 +342,10 @@ vlc_fem <- ggplot(vl_plot_female, aes(x = age_group)) +
 
 
 ```{r}
-# Sum of TX_NEW from Feb 2024 to Jul 2024 to determine eligibility for VL testing
+# Sum of TX_NEW from Apr 2024 to Sep 2024 to determine eligibility for VL testing
 
 tx_new_mar_aug<- data_fil %>% 
-  filter(indicator == "TX_NEW_R",year == 2024 & month %in% c("Mar", "Apr", "May", "Jun", "Jul","Aug")) %>% 
+  filter(indicator == "TX_NEW_R",year == 2024 & month %in% c("Apr", "May", "Jun", "Jul","Aug", "Sep")) %>% 
   summarise(total_tx_new = sum(value, na.rm = TRUE)) %>% 
   pull(total_tx_new)
 ```
@@ -376,10 +376,10 @@ vl_data_site <- vl_data_site %>%
     year = year(period)
   )
 
-# Filter the data for August 2024
+# Filter the data for September 2024
 
 vl_data_jul <- vl_data_site %>%
-  filter(period == ymd("2024-08-01"))
+  filter(period == ymd("2024-09-01"))
 
 # Create VL Summaries by Site: VL <50, VL 50-199, VL 200-999 to be categorized as suppressed and VL >1000 to be categorized as unsuppressed
 vl_cat <- vl_data_jul %>%
@@ -456,6 +456,10 @@ prog_vl_sup <- vl_summary_pivot %>%
   pull(vlsup_rate)
 
 ```
+
+
+
+
 
 
 ```{r}
@@ -569,10 +573,13 @@ vl_sup50 <- vl_lt50/tx_pvls_d
 
 radet <- clean_names(radet)
 
-cut_off_dt <- as.Date("2024-08-31", format="%Y-%m-%d")
+cut_off_dt <- as.Date("2024-09-30", format="%Y-%m-%d")
 
-radet <- radet %>% 
-  rename(facility = facility_name)
+#radet <- radet %>% 
+  #rename(facility = facility_name)
+
+ radet <- radet %>% 
+  rename(sex = gender) 
 
 
 radet <- radet %>% 
@@ -644,7 +651,8 @@ radet <- radet %>%
              #       
               #      ),
            
-         age_ngi =
+         
+        age_ngi =
            case_when(age <15 ~ "<15",
                     TRUE ~ "15+"),
          
@@ -713,7 +721,7 @@ radet <- radet %>%
                      regimen_line == "Pediatrics and Adolescent 3rd Line >30kg" ~ "3rd Line",
                      TRUE ~ regimen_line),
       
-      
+    
       
       sex =
         case_when(
@@ -851,7 +859,7 @@ value_box(
 
 ```{r}
 value_box(
-  title = tags$span("Current on Treatment", style = "font-size: 30px;font-weight:bold;"),
+  title = tags$span("Current on Treatment: Prelim", style = "font-size: 30px;font-weight:bold;"),
   value = scales::comma(radet_tx_curr),
   showcase = bsicons::bs_icon("people"),
   theme = value_box_theme(bg ="#002a2a")
@@ -911,7 +919,7 @@ value_box(
 
 ### {width=50%}
 
-```{r echo=FALSE, results='asis', warning=FALSE, message=FALSE, title="PROGRAM AREA PERFORMANCE AGAINST TARGETS | OCTOBER 2023 - AUGUST 2024", height=550, width = 800}
+```{r echo=FALSE, results='asis', warning=FALSE, message=FALSE, title="PROGRAM AREA PERFORMANCE AGAINST TARGETS | OCTOBER 2023 - SEPTEMBER 2024", height=550, width = 800}
 # windows(width = 20, height = 10)
 grid.newpage()  # Clear the existing grid
 grid.draw(grid.arrange(grobs = plot_list, ncol = 6))

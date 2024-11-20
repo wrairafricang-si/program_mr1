@@ -344,7 +344,7 @@ vlc_fem <- ggplot(vl_plot_female, aes(x = age_group)) +
 ```{r}
 # Sum of TX_NEW from Apr 2024 to Sep 2024 to determine eligibility for VL testing
 
-tx_new_mar_aug<- data_fil %>% 
+tx_new_oct<- data_fil %>% 
   filter(indicator == "TX_NEW_R",year == 2024 & month %in% c("May", "Jun", "Jul","Aug", "Sep", "Oct")) %>% 
   summarise(total_tx_new = sum(value, na.rm = TRUE)) %>% 
   pull(total_tx_new)
@@ -554,7 +554,7 @@ tx_pvls_d <- data_sum_new %>%
   filter(prog_area == "TX_PVLS_D") %>% 
   pull(result)
 
-eligible_vl <- tx_curr - tx_new_mar_aug
+eligible_vl <- tx_curr - tx_new_oct
 
 vls <- total_vl_sup/tx_pvls_d
 

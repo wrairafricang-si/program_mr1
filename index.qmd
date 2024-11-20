@@ -1,5 +1,5 @@
 ---
-title: WRAIR AFRICA DASHBOARD | SEPTEMBER 2024
+title: WRAIR AFRICA DASHBOARD | OCTOBER 2024
 author: Strategic Information Unit
 format:
   dashboard:
@@ -58,19 +58,19 @@ pacman::p_load(tidyverse,
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Load the data
 
-prog_data <- read_csv("data/prog_data_sep24.csv")
+prog_data <- read_csv("data/prog_data_oct24.csv")
 
-prog_targets <- read_csv("data/fy24_targets.csv")
+prog_targets <- read_csv("data/fy25_targets.csv")
 
-vl_data <- read_csv("data/vl_data_sep24.csv")
+vl_data <- read_csv("data/vl_data_oct24.csv")
 
 prog_site <- read_csv("data/prog_sites.csv")
 
-vl_casc <- read_csv("data/vl_data_agesex_sep24.csv")
+vl_casc <- read_csv("data/vl_data_agesex_oct24.csv")
 
 biom_update <- read_csv("data/biometric_update.csv")
 
-radet <- read_csv("data/radet_sep24.csv")
+radet <- read_csv("data/radet_oct24.csv")
 
 ```
 
@@ -112,12 +112,12 @@ prog_data_site <- prog_data_site %>%
 
 # Filter the data for the required period
 data_fil <- prog_data_site %>%
-  filter(period >= ymd("2023-10-01") & period <= ymd("2024-09-30"))
+  filter(period >= ymd("2024-10-01") & period <= ymd("2025-09-30"))
 
 
 data_fil_cum <- prog_data_site %>% 
   filter(indicator == "TX_CURR_R" | indicator == "TX_PVLS_D_R" | indicator == "OVC_SERV_CP_R",
-         month == "Sep")
+         month == "Oct")
 
 
 # Create summary values for each indicator
@@ -170,14 +170,14 @@ data_sum_r <- data_sum_r %>%
 
 # Change the PrEP target code names
 
-prog_targets <- prog_targets %>% 
-  mutate(target_code = str_replace(target_code,"^PREP_", "PrEP_"))
+#prog_targets <- prog_targets %>% 
+ # mutate(target_code = str_replace(target_code,"^PREP_", "PrEP_"))
 
 
 
 # Create the program area variable in the target data set
-prog_targets_t <- prog_targets %>% 
-  mutate(prog_area = sub("_T$", "", target_code))
+prog_targets_t <- clean_names(prog_targets) %>% 
+  mutate(prog_area = sub(" Target$", "", target_code))
 
 
 biom_update <- clean_names(biom_update)
@@ -218,7 +218,7 @@ vl_casc <- vl_casc %>%
 # Filter the TX_CURR, TX_PVLS_D, and TX_PVLS_N data for August 2024
 
 vl_casc_aug <- vl_casc %>%
-  filter(period == ymd("2024-09-01") & age_group != "All") %>% 
+  filter(period == ymd("2024-10-01") & age_group != "All") %>% 
   filter(data !="TX_NEW")
 
 ```
@@ -230,7 +230,7 @@ vl_casc_aug <- vl_casc %>%
 
 # Create the new variable within the existing vl_casc dataset
 vl_casc1 <- vl_casc %>%
-  filter(data == "TX_NEW" & month %in% c("Apr", "May", "Jun", "Jul","Aug", "Sep") & year == 2024) %>% 
+  filter(data == "TX_NEW" & month %in% c("May", "Jun", "Jul","Aug", "Sep", "Oct") & year == 2024) %>% 
   group_by(data, sex, age_group) %>%
   summarise(tx_new_sum = sum(value, na.rm = TRUE)) %>%
   ungroup() %>% 
@@ -345,7 +345,7 @@ vlc_fem <- ggplot(vl_plot_female, aes(x = age_group)) +
 # Sum of TX_NEW from Apr 2024 to Sep 2024 to determine eligibility for VL testing
 
 tx_new_mar_aug<- data_fil %>% 
-  filter(indicator == "TX_NEW_R",year == 2024 & month %in% c("Apr", "May", "Jun", "Jul","Aug", "Sep")) %>% 
+  filter(indicator == "TX_NEW_R",year == 2024 & month %in% c("May", "Jun", "Jul","Aug", "Sep", "Oct")) %>% 
   summarise(total_tx_new = sum(value, na.rm = TRUE)) %>% 
   pull(total_tx_new)
 ```
@@ -376,10 +376,10 @@ vl_data_site <- vl_data_site %>%
     year = year(period)
   )
 
-# Filter the data for September 2024
+# Filter the data for October 2024
 
 vl_data_jul <- vl_data_site %>%
-  filter(period == ymd("2024-09-01"))
+  filter(period == ymd("2024-10-01"))
 
 # Create VL Summaries by Site: VL <50, VL 50-199, VL 200-999 to be categorized as suppressed and VL >1000 to be categorized as unsuppressed
 vl_cat <- vl_data_jul %>%
@@ -573,17 +573,17 @@ vl_sup50 <- vl_lt50/tx_pvls_d
 
 radet <- clean_names(radet)
 
-cut_off_dt <- as.Date("2024-09-30", format="%Y-%m-%d")
-
-#radet <- radet %>% 
-  #rename(facility = facility_name)
-
- radet <- radet %>% 
-  rename(sex = gender) 
-
+cut_off_dt <- as.Date("2024-10-31", format="%Y-%m-%d")
 
 radet <- radet %>% 
-  mutate(facility = ifelse(facility =="ba Nigerian Army Amoured Centre Medical Reception Station Bauchi", "ba 33 Brigade Medical Center Shadawanka", facility)) %>%
+  #rename(facility = facility_name)
+
+ #radet <- radet %>% 
+  #rename(sex = gender) 
+
+
+#radet <- radet %>% 
+ # mutate(facility = ifelse(facility =="ba Nigerian Army Amoured Centre Medical Reception Station Bauchi", "ba 33 Brigade Medical Center Shadawanka", facility)) %>%
   
   mutate(patient_status = 
         case_when(
@@ -593,10 +593,10 @@ radet <- radet %>%
           patient_status == "Treatment stop" ~ "Stopped treatment",
           TRUE ~ patient_status),
         
-        facility =
+        facility_name =
           case_when(
-            facility == "82DMSH Enugu" ~ "82 Division Medical Services and Hospital",
-            TRUE ~ facility
+            facility_name == "82DMSH Enugu" ~ "82 Division Medical Services and Hospital",
+            TRUE ~ facility_name
           )
   )
 
@@ -643,13 +643,13 @@ radet <- radet %>%
              arv_refill_days >=180 ~ "6+"),
          
         
-        #age_group = 
-         # case_when(age_group == "04-Jan" ~ "1-4",
-          #          age_group == "09-May" ~ "5-9",
-           #         age_group == "14-Oct" ~ "10-14",
-            #        TRUE ~ age_group
-             #       
-              #      ),
+        age_group = 
+         case_when(age_group == "04-Jan" ~ "1-4",
+                    age_group == "09-May" ~ "5-9",
+                   age_group == "14-Oct" ~ "10-14",
+                  TRUE ~ age_group
+                   
+                  ),
            
          
         age_ngi =
@@ -719,6 +719,7 @@ radet <- radet %>%
                      regimen_line == "Adult Third Line" ~ "3rd Line",
                      regimen_line == "Adult 3rd Line" ~ "3rd Line",
                      regimen_line == "Pediatrics and Adolescent 3rd Line >30kg" ~ "3rd Line",
+                     regimen_line == "Pediatric Third Line" ~ "3rd Line",
                      TRUE ~ regimen_line),
       
     
@@ -787,6 +788,104 @@ radet_vl_cov <- radet %>%
 
 
 ```
+
+```{r}
+# rename systolic and diastolic blood pressure fields
+
+radet <- radet %>% 
+  rename(systolic_bp = systolic_blood_pressure_mm_hg,
+         diastolic_bp = diastolic_blood_pressure_mm_hg)
+
+```
+
+
+```{r}
+# Determine the blood pressure status for every patient
+
+radet <- radet %>% 
+  mutate(
+    bp_status = 
+      case_when(
+        is.na(systolic_bp) | is.na(diastolic_bp) ~ NA_character_,
+        systolic_bp < 120 & diastolic_bp < 80 ~ "Optimal",
+        systolic_bp < 130 & diastolic_bp < 85 ~ "Normal",
+        (systolic_bp >= 130 & systolic_bp <= 139) | (diastolic_bp >= 85 & diastolic_bp <= 89) ~ "High Normal",
+        (systolic_bp >= 140 & systolic_bp <= 159) | (diastolic_bp >= 90 & diastolic_bp <= 99) ~ "Grade 1 Hypertension",
+        (systolic_bp >= 160 & systolic_bp <= 179) | (diastolic_bp >= 100 & diastolic_bp <= 109) ~ "Grade 2 Hypertension",
+        systolic_bp >= 180 | diastolic_bp >= 110 ~ "Grade 3 Hypertension",
+        systolic_bp >= 140 & diastolic_bp < 90 ~ "Isolated Systolic Hypertension",
+    TRUE ~ "Unknown"
+      )
+  )
+
+
+
+```
+
+
+
+```{r}
+# Write radet dataset to CSV
+
+# write_csv(radet, "radet_oct.csv")
+
+
+
+```
+
+
+
+
+```{r}
+# bp_summary <- radet %>%
+#   filter(status_check == "Active") %>%
+#   group_by(bp_status) %>%
+#   summarise(
+#     count = n(),
+#     percentage = (n() / nrow(radet)) * 100
+#   )
+# 
+# bp_summary
+```
+
+```{r}
+# Select only BP data
+
+# radet_bp <- radet %>%
+  # select(facility_name, patient_id, sex, age, age_group, status_check, systolic_bp, diastolic_bp, bp_status)
+
+```
+
+
+
+```{r}
+# bp_summary <- radet_bp %>%
+  # filter only active patients from status_check and filter out NA values from bp_status2
+ # filter(status_check == "Active") %>%
+  # filter(!is.na(bp_status))
+
+```
+
+
+
+
+```{r}
+# bp_sum <- bp_summary %>% 
+ # group_by(bp_status) %>%
+ # summarise(
+  #  count = n(),
+  #  percentage = (n() / nrow(bp_summary)) * 100
+ # )
+
+# Display the data in descending order of percentage
+
+# bp_sum <- bp_sum %>%
+#  arrange(desc(percentage))
+
+# bp_sum
+
+```
+
 
 
 

@@ -1,0 +1,17 @@
+<!-- Office-screen mode: open the site with ?kiosk (e.g. .../index.html?kiosk)
+     to rotate pages every 45 s and reload hourly to pick up new data.
+     Normal visitors (no ?kiosk) are unaffected. -->
+<script>
+(function () {
+  var q = new URLSearchParams(window.location.search);
+  if (!q.has("kiosk")) return;
+  var seconds = parseInt(q.get("kiosk"), 10) || 45;
+  setTimeout(function () { window.location.reload(); }, 60 * 60 * 1000);
+  setInterval(function () {
+    var tabs = Array.from(document.querySelectorAll(".navbar .nav-link[data-bs-toggle='tab']"));
+    if (tabs.length < 2) return;
+    var i = tabs.findIndex(function (t) { return t.classList.contains("active"); });
+    tabs[(i + 1) % tabs.length].click();
+  }, seconds * 1000);
+})();
+</script>

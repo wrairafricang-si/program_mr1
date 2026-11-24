@@ -139,8 +139,8 @@ plot_ly(perf, y = ~mer, x = ~shown, type = "bar", orientation = "h",
         color = ~status, colors = col_status,
         text = ~label, textposition = "outside", cliponaxis = FALSE,
         textfont = list(color = ink, size = 15),
-        customdata = ~status,
-        hovertemplate = "%{y}: %{text}<extra></extra>") |>
+        customdata = ~source,
+        hovertemplate = "%{y}: %{text}<br>Source: %{customdata}<extra></extra>") |>
   tv_layout(xaxis = list(title = "", tickformat = ".0%", range = c(0, 1.95),
                          gridcolor = grid_col, tickvals = seq(0, 1.5, 0.25)),
             yaxis = list(title = ""), bargap = 0.3,
@@ -259,3 +259,4 @@ plot_ly(vb, y = ~site, x = ~share, color = ~vl_band, colors = bands,
                           traceorder = "normal"),
             margin = list(t = 40, l = 10, r = 30, b = 10))
 ```
+

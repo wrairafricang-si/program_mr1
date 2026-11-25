@@ -6,3 +6,12 @@ $headings-font-weight: 700;
 .bslib-value-box .vb-title { font-size: 1.9rem !important; font-weight: 700; line-height: 1.15; }
 .bslib-value-box .value-box-value { font-size: 2.6rem; }
 .bslib-value-box .value-box-showcase .bi { font-size: 3rem; }
+
+// Quartz lays a semi-transparent white gradient over every card
+// (background-image: linear-gradient(125deg, white 30% -> 20%)), which washes
+// out value box colors. Remove it on value boxes so #0055cc shows as #0055cc.
+.bslib-value-box.card {
+  background-image: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
